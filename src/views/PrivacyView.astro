@@ -1,0 +1,33 @@
+---
+// Aviso de privacidad base. Revisarlo con un abogado y confirmar la razón social (site.legalEntity) antes de publicar.
+import Base from '../layouts/Base.astro';
+import { type Lang } from '../data/houses';
+import { routes } from '../i18n/ui';
+import { site } from '../config/site';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const en = lang === 'en';
+const blocks = en
+  ? [
+      ['Who is responsible', `${site.legalEntity}, ${site.address.street}, ${site.address.locality}, ${site.address.region}, Mexico, is responsible for the personal data you share with us.`],
+      ['What this site collects', 'This website does not ask for or store personal data. It has no forms and does not process payments.'],
+      ['Bookings', 'When you check availability or book, you are taken to our booking system, Lodgify, which processes your booking and payment under its own privacy policy. Card details never pass through this site.'],
+      ['WhatsApp', 'If you message us on WhatsApp, we use your name, number and messages only to answer you and organise your stay.'],
+      ['Your rights', 'You can ask to access, correct or delete your data, or object to its use (ARCO rights), by writing to us on WhatsApp.'],
+    ]
+  : [
+      ['Responsable', `${site.legalEntity}, ${site.address.street}, ${site.address.locality}, ${site.address.region}, México, es responsable de los datos personales que nos compartas.`],
+      ['Qué recaba este sitio', 'Este sitio no pide ni guarda datos personales. No tiene formularios y no procesa pagos.'],
+      ['Reservas', 'Al consultar disponibilidad o reservar, pasas a nuestro sistema de reservas, Lodgify, que procesa la reserva y el pago bajo su propia política de privacidad. Los datos de tu tarjeta nunca pasan por este sitio.'],
+      ['WhatsApp', 'Si nos escribes por WhatsApp, usamos tu nombre, número y mensajes solo para responderte y organizar tu estancia.'],
+      ['Tus derechos', 'Puedes pedir acceso, rectificación, cancelación u oposición al uso de tus datos (derechos ARCO) escribiéndonos por WhatsApp.'],
+    ];
+---
+<Base lang={lang} title={en ? 'Privacy · Gato Surf Houses' : 'Privacidad · Gato Surf Houses'} description={en ? 'How Gato Surf Houses handles personal data.' : 'Cómo trata Gato Surf Houses los datos personales.'} alt={routes.privacy}>
+  <div class="gs-wrap gs-section">
+    <h1 class="gs-display-l" style="margin-bottom:var(--space-12)">{en ? 'Privacy notice' : 'Aviso de privacidad'}</h1>
+    <ul class="gs-services">
+      {blocks.map(([a, b]) => <li class="gs-service" style="grid-template-columns:minmax(0,16rem) minmax(0,1fr)"><h3 style="font-size:22px">{a}</h3><p style="font-size:17px;line-height:27px;color:var(--ink)">{b}</p></li>)}
+    </ul>
+  </div>
+</Base>

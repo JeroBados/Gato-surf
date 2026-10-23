@@ -1,0 +1,55 @@
+---
+// Search Bar oficial de Lodgify. Busca en las 4 casas y abre los resultados en el sitio de Lodgify.
+// Una sola vez por página (Lodgify lo busca por id). Si el script no carga, queda nuestro buscador.
+import { lodgify, searchPageUrl } from '../config/lodgify';
+import type { Lang } from '../data/houses';
+import BookingSearch from './BookingSearch.astro';
+import Icon from './Icon.astro';
+import { t } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const es = lang === 'es';
+const L = es
+  ? { in: 'Llegada', out: 'Salida', guests: 'Huéspedes', one: '{{NumberOfGuests}} huésped', many: '{{NumberOfGuests}} huéspedes', loc: 'Ubicación', search: 'Ver disponibilidad', minStay: '{"one":"Mínimo {minStay} noche","other":"Mínimo {minStay} noches"}', adults: '{"one":"adulto","other":"adultos"}', adultsD: 'Desde {minAge} años', children: '{"one":"niño","other":"niños"}', childrenD: 'De {minAge} a {maxAge} años', childrenNo: 'No apto para niños', infants: '{"one":"bebé","other":"bebés"}', infantsD: 'Menores de {maxAge}', infantsNo: 'No apto para bebés', pets: '{"one":"mascota","other":"mascotas"}', petsNo: 'No se permiten', done: 'Listo' }
+  : { in: 'Check-in', out: 'Check-out', guests: 'Guests', one: '{{NumberOfGuests}} guest', many: '{{NumberOfGuests}} guests', loc: 'Location', search: 'Check availability', minStay: '{"one":"Minimum {minStay} night","other":"Minimum {minStay} nights"}', adults: '{"one":"adult","other":"adults"}', adultsD: 'Ages {minAge} or above', children: '{"one":"child","other":"children"}', childrenD: 'Ages {minAge}-{maxAge}', childrenNo: 'Not suitable for children', infants: '{"one":"infant","other":"infants"}', infantsD: 'Under {maxAge}', infantsNo: 'Not suitable for infants', pets: '{"one":"pet","other":"pets"}', petsNo: 'Not allowed', done: 'Done' };
+const useWidget = lodgify.mode === 'widget';
+---
+{useWidget ? (
+  <div class="gs-search gs-ldg" data-ldg="search">
+    <div
+      id="lodgify-search-bar"
+      data-website-id={lodgify.websiteId}
+      data-language-code={lang}
+      data-search-page-url={searchPageUrl(lang)}
+      data-dates-check-in-label={L.in}
+      data-dates-check-out-label={L.out}
+      data-guests-counter-label={L.guests}
+      data-guests-input-singular-label={L.one}
+      data-guests-input-plural-label={L.many}
+      data-location-input-label={L.loc}
+      data-search-button-label={L.search}
+      data-dates-input-min-stay-tooltip-text={L.minStay}
+      data-guests-breakdown-label={L.guests}
+      data-adults-label={L.adults}
+      data-adults-description={L.adultsD}
+      data-children-label={L.children}
+      data-children-description={L.childrenD}
+      data-children-not-allowed-label={L.childrenNo}
+      data-infants-label={L.infants}
+      data-infants-description={L.infantsD}
+      data-infants-not-allowed-label={L.infantsNo}
+      data-pets-label={L.pets}
+      data-pets-not-allowed-label={L.petsNo}
+      data-done-label={L.done}
+      data-new-tab="false"
+      data-version="stable"
+      data-has-guests-breakdown
+    ></div>
+    <div class="gs-ldg__fallback"><BookingSearch lang={lang} id="search-fallback" /></div>
+    <p class="gs-search__secure gs-ldg__secure"><Icon name="lock" />{t(lang).search.secure}</p>
+    <script is:inline defer src={lodgify.scripts.searchBar}></script>
+  </div>
+) : (
+  <BookingSearch lang={lang} id="home-search" />
+)}

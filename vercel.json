@@ -1,0 +1,142 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "buildCommand": "astro build",
+  "outputDirectory": "dist",
+  "trailingSlash": true,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), payment=(), interest-cohort=()"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' https://lodgify.com https://*.lodgify.com; style-src 'self' 'unsafe-inline' https://*.lodgify.com; img-src 'self' data: https://*.lodgify.com https://*.icdbcdn.com; font-src 'self' data: https://*.lodgify.com; connect-src 'self' https://lodgify.com https://*.lodgify.com; frame-src https://*.lodgify.com; form-action 'self' https://gatosurfhouses.com https://*.gatosurfhouses.com https://*.lodgify.com; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
+        }
+      ]
+    },
+    {
+      "source": "/fonts/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/images/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/es/propiedades",
+      "destination": "/es/#houses",
+      "permanent": true
+    },
+    {
+      "source": "/en/all-properties",
+      "destination": "/#houses",
+      "permanent": true
+    },
+    {
+      "source": "/es/contactenos",
+      "destination": "/es/",
+      "permanent": true
+    },
+    {
+      "source": "/en/contact-us",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/en",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/en/what-to-do-in-la-saladita",
+      "destination": "/la-saladita/",
+      "permanent": true
+    },
+    {
+      "source": "/es/rincon-del-surf-3-personas",
+      "destination": "/es/casas/rincon-del-surf/",
+      "permanent": true
+    },
+    {
+      "source": "/es/paraiso-del-surf-3-personas",
+      "destination": "/es/casas/paraiso-del-surf/",
+      "permanent": true
+    },
+    {
+      "source": "/es/villa-de-mar-6-personas",
+      "destination": "/es/casas/villa-de-mar/",
+      "permanent": true
+    },
+    {
+      "source": "/es/casa-gato-surf-6-personas",
+      "destination": "/es/casas/casa-gato-surf/",
+      "permanent": true
+    },
+    {
+      "source": "/en/surf-rincon-50m-surf-ac-starlink-alberca",
+      "destination": "/houses/rincon-del-surf/",
+      "permanent": true
+    },
+    {
+      "source": "/en/paraiso-del-surf-3-personas",
+      "destination": "/houses/paraiso-del-surf/",
+      "permanent": true
+    },
+    {
+      "source": "/en/villa-de-mar-6-personas",
+      "destination": "/houses/villa-de-mar/",
+      "permanent": true
+    },
+    {
+      "source": "/en/gato-surf-house-46-pers-2-rec-ac-starlink-pool",
+      "destination": "/houses/casa-gato-surf/",
+      "permanent": true
+    },
+    {
+      "source": "/compound",
+      "destination": "/group-stays/",
+      "permanent": true
+    },
+    {
+      "source": "/es/las-cuatro-casas",
+      "destination": "/es/grupos/",
+      "permanent": true
+    }
+  ]
+}

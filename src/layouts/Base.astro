@@ -1,0 +1,78 @@
+---
+import '../styles/tokens.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../config/site';
+import { t } from '../i18n/ui';
+import type { Lang } from '../data/houses';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  alt: { en: string; es: string };
+  current?: 'houses' | 'compound' | 'saladita';
+  image?: string;
+  schema?: Record<string, unknown>;
+}
+const { lang, title, description, alt, current, image = '/images/og.jpg', schema } = Astro.props;
+const canonical = new URL(alt[lang], site.url).toString();
+const s = t(lang);
+const business = {
+  '@context': 'https://schema.org',
+  '@type': 'LodgingBusiness',
+  name: site.name,
+  url: site.url,
+  image: new URL('/images/hero.jpg', site.url).toString(),
+  telephone: site.whatsapp.number,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    addressLocality: site.address.locality,
+    addressRegion: site.address.region,
+    postalCode: site.address.postalCode,
+    addressCountry: site.address.country,
+  },
+  checkinTime: '15:00',
+  checkoutTime: '11:00',
+  petsAllowed: true,
+  aggregateRating: { '@type': 'AggregateRating', ratingValue: site.rating.value, reviewCount: site.rating.count },
+};
+---
+<!doctype html>
+<html lang={lang}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <link rel="alternate" hreflang="en" href={new URL(alt.en, site.url).toString()} />
+  <link rel="alternate" hreflang="es" href={new URL(alt.es, site.url).toString()} />
+  <link rel="alternate" hreflang="x-default" href={new URL(alt.en, site.url).toString()} />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content={site.name} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={new URL(image, site.url).toString()} />
+  <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'es_MX'} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#f4f0e8" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="preload" href="/fonts/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/HankenGrotesk-400.woff2" as="font" type="font/woff2" crossorigin />
+  <script type="application/ld+json" set:html={JSON.stringify(schema ?? business)} />
+</head>
+<body>
+  <a class="gs-skip" href="#main">{lang === 'en' ? 'Skip to content' : 'Ir al contenido'}</a>
+  <Header lang={lang} alt={alt} current={current} />
+  <main id="main"><slot /></main>
+  <Footer lang={lang} />
+  <a class="gs-wa" href={site.whatsapp.link} rel="noopener" aria-label={s.whatsappLabel}><Icon name="chat" />{s.whatsapp}</a>
+</body>
+</html>

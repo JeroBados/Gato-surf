@@ -1,0 +1,58 @@
+---
+import type { Lang } from '../data/houses';
+import { routes, t } from '../i18n/ui';
+import Icon from './Icon.astro';
+import lockup from '../assets/brand/lockup.svg?raw';
+
+interface Props { lang: Lang; alt: { en: string; es: string }; current?: 'houses' | 'compound' | 'saladita' }
+const { lang, alt, current } = Astro.props;
+const s = t(lang).nav;
+const home = routes.home[lang];
+const links = [
+  { key: 'houses', href: `${home}#houses`, label: s.houses },
+  { key: 'compound', href: routes.compound[lang], label: s.compound },
+  { key: 'services', href: `${home}#services`, label: s.services },
+  { key: 'saladita', href: routes.saladita[lang], label: s.saladita },
+];
+---
+<header class="gs-header">
+  <div class="gs-wrap gs-header__in">
+    <a class="gs-logo" href={home} aria-label="Gato Surf Houses" set:html={lockup} />
+    <nav aria-label={lang === 'en' ? 'Main' : 'Principal'}>
+      <ul class="gs-nav">
+        {links.map((l) => <li><a href={l.href} aria-current={current === l.key ? 'page' : undefined}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+    <div class="gs-header__actions">
+      <div class="gs-lang" role="group" aria-label={t(lang).langLabel}>
+        <a href={alt.en} hreflang="en" lang="en" aria-current={lang === 'en' ? 'true' : undefined}>EN</a>
+        <a href={alt.es} hreflang="es" lang="es" aria-current={lang === 'es' ? 'true' : undefined}>ES</a>
+      </div>
+      <a class="gs-btn gs-btn--primary" href={`${home}#book`}>{s.book}</a>
+      <button class="gs-btn gs-btn--secondary gs-menu-btn" type="button" aria-expanded="false" aria-controls="mobile-nav" data-menu>
+        <Icon name="menu" /><span class="gs-sr">{s.menu}</span>
+      </button>
+    </div>
+  </div>
+  <nav id="mobile-nav" class="gs-mobile-nav" hidden aria-label={s.menu}>
+    <ul class="gs-wrap">
+      {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      <li><a class="gs-btn gs-btn--primary gs-btn--block" href={`${home}#book`}>{s.book}</a></li>
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-menu]');
+  const panel = document.getElementById('mobile-nav');
+  if (btn && panel) {
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      panel.hidden = open;
+    });
+    panel.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) { panel.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+    });
+  }
+</script>

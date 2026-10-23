@@ -1,0 +1,66 @@
+/* Gato Surf Houses — tokens. Fuente: el Design System "Gato Surf Houses" (tokens.json).
+   El sitio público usa solo el tema Cal (claro): las fotos se leen sobre cal y la marca se ve igual en todos lados. */
+
+@font-face { font-family: "Instrument Serif"; src: url("/fonts/InstrumentSerif-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Instrument Serif"; src: url("/fonts/InstrumentSerif-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Hanken Grotesk"; src: url("/fonts/HankenGrotesk-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Hanken Grotesk"; src: url("/fonts/HankenGrotesk-500.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Hanken Grotesk"; src: url("/fonts/HankenGrotesk-600.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+
+:root {
+  color-scheme: light;
+
+  /* Primitivos de marca: los materiales de la propiedad */
+  --cal: #f4f0e8;
+  --palma: #2f4a3a;
+  --barro: #b5694a;
+  --concreto: #8c8579;
+
+  /* Superficies */
+  --surface: var(--cal);
+  --surface-raised: #fbf9f5;
+  --surface-sunk: #ebe5d9;
+  --surface-inverse: var(--palma);
+
+  /* Texto */
+  --ink: #22302a;
+  --ink-display: var(--palma);
+  --ink-muted: #6b655b;
+  --on-inverse: var(--cal);
+  --on-inverse-muted: #c9c2b4;
+
+  /* Acento y acción */
+  --accent: var(--barro);
+  --accent-text: #8f4b31;
+  --accent-soft: #f0e0d5;
+  --action: var(--palma);
+  --action-hover: #24392c;
+  --on-action: var(--cal);
+
+  /* Líneas y estados */
+  --line: #ddd5c6;
+  --line-strong: #7f786c;
+  --focus-ring: var(--barro);
+  --positive: #2f6b4a;
+  --critical: #a23b26;
+
+  --shadow-float: 0 10px 30px rgba(34, 48, 42, 0.16);
+
+  /* Tipografía */
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+
+  /* Espaciado */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px;
+  --space-8: 32px; --space-12: 48px; --space-16: 64px; --space-24: 96px; --space-32: 128px;
+
+  /* Radios */
+  --radius-none: 0; --radius-sm: 2px; --radius-pill: 999px;
+
+  /* Medidas */
+  --content-max: 1240px; --measure: 38rem; --hairline: 1px; --tap-min: 44px;
+  --gutter: max(var(--space-4), env(safe-area-inset-left, 0px));
+}
+
+@media (min-width: 640px) { :root { --gutter: var(--space-8); } }
+@media (min-width: 1024px) { :root { --gutter: var(--space-12); } }

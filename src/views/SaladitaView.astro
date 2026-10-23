@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import Cota from '../components/Cota.astro';
+import { type Lang } from '../data/houses';
+import { routes, t } from '../i18n/ui';
+import { site, waLink } from '../config/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const c = lang === 'en'
+  ? {
+      title: 'La Saladita, Guerrero · Gato Surf Houses',
+      description: 'A small surf village 45 minutes from Zihuatanejo, known for a long, friendly left. How to get there and what to know before you come.',
+      h1: 'La Saladita.',
+      lead: 'A small surf village on the Pacific coast of Guerrero, about 45 minutes from Zihuatanejo. Quiet, green, and known for a long left-hand wave.',
+      blocks: [
+        ['The wave', 'A long, friendly left that works for longboards and every level. Gato Surf Houses is 20 m from the main point: under a minute on foot.'],
+        ['Getting here', 'About 45 minutes by car from Ixtapa-Zihuatanejo International Airport (ZIH), roughly 40 km. We can arrange the transfer, with room for boards and an optional grocery stop.'],
+        ['Finding the houses', 'Calle Coco s/n, just behind Marea restaurant. Follow the main road to the fishermen\'s area, turn onto Calle Valencia and continue to Marea. Don\'t enter via Calle Camila.'],
+        ['Good to know', 'Bring cash: ATMs are few and often empty. Mobile signal is weak; the houses have Starlink. Respect the nature and the local community.'],
+        ['Beyond the surf', 'Yoga by the sea, massages and holistic therapies, fresh seafood at the beachfront restaurants, birdwatching and walks in the jungle, sunset walks on the beach.'],
+      ],
+    }
+  : {
+      title: 'La Saladita, Guerrero · Gato Surf Houses',
+      description: 'Un pueblo surfero a 45 minutos de Zihuatanejo, conocido por una izquierda larga y amable. Cómo llegar y qué saber antes de venir.',
+      h1: 'La Saladita.',
+      lead: 'Un pueblo surfero en la costa del Pacífico de Guerrero, a unos 45 minutos de Zihuatanejo. Tranquilo, verde y conocido por una ola izquierda larga.',
+      blocks: [
+        ['La ola', 'Una izquierda larga y amable, ideal para longboard y para todos los niveles. Gato Surf Houses está a 20 m del point principal: menos de un minuto caminando.'],
+        ['Cómo llegar', 'A unos 45 minutos en auto del Aeropuerto Internacional de Ixtapa-Zihuatanejo (ZIH), unos 40 km. Podemos coordinar el traslado, con lugar para tablas y parada opcional en el súper.'],
+        ['Cómo encontrar las casas', 'Calle Coco s/n, justo detrás del restaurante Marea. Sigue el camino principal hasta la zona de pescadores, dobla en Calle Valencia y sigue hasta Marea. No entres por Calle Camila.'],
+        ['Para tener en cuenta', 'Trae efectivo: hay pocos cajeros y muchas veces sin dinero. La señal de celular es débil; las casas tienen Starlink. Respeta la naturaleza y a la comunidad local.'],
+        ['Más allá del surf', 'Yoga frente al mar, masajes y terapias holísticas, mariscos frescos en los restaurantes de la playa, avistamiento de aves y caminatas por la selva, paseos al atardecer.'],
+      ],
+    };
+---
+<Base lang={lang} title={c.title} description={c.description} alt={routes.saladita} current="saladita" image="/images/garden-palms.jpg">
+  <div class="gs-wrap">
+    <header class="gs-house-head gs-reveal" style="padding-top:var(--space-16)">
+      <p class="gs-eyebrow">{s.eyebrowPlace}</p>
+      <h1>{c.h1}</h1>
+      <p class="gs-lead">{c.lead}</p>
+      <Cota label={s.cota} />
+    </header>
+    <div class="gs-photo gs-photo--3x2" style="aspect-ratio:21/9">
+      <img src="/images/garden-palms.jpg" width="1600" height="1067" fetchpriority="high"
+        alt={lang === 'en' ? 'Palm garden at Gato Surf Houses' : 'Jardín de palmeras en Gato Surf Houses'} />
+    </div>
+  </div>
+  <section class="gs-wrap gs-section">
+    <ul class="gs-services">
+      {c.blocks.map(([a, b]) => <li class="gs-service" style="grid-template-columns:minmax(0,16rem) minmax(0,1fr)"><h3>{a}</h3><p style="font-size:17px;line-height:27px;color:var(--ink)">{b}</p></li>)}
+    </ul>
+    <p style="margin-top:var(--space-12)"><a class="gs-btn gs-btn--primary" href={waLink()} rel="noopener">{s.whatsappCta}</a> <span class="gs-muted gs-small" style="margin-left:var(--space-3)">{site.whatsapp.number}</span></p>
+  </section>
+</Base>

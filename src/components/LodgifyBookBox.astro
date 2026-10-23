@@ -1,0 +1,60 @@
+---
+// Book Now Box oficial de Lodgify para una casa: fechas, huéspedes, precio total y botón de reserva.
+// Si la casa no tiene rentalId en src/config/lodgify.ts, se usa nuestro buscador con la casa elegida.
+import { lodgify } from '../config/lodgify';
+import type { Lang } from '../data/houses';
+import BookingSearch from './BookingSearch.astro';
+import Icon from './Icon.astro';
+import { t } from '../i18n/ui';
+
+interface Props { lang: Lang; house: string }
+const { lang, house } = Astro.props;
+const rentalId = lodgify.rentalIds[house];
+const es = lang === 'es';
+const L = es
+  ? { in: 'Llegada', out: 'Salida', guests: 'Huéspedes', one: '{{NumberOfGuests}} huésped', many: '{{NumberOfGuests}} huéspedes', loc: 'Ubicación', total: 'Precio total:', select: 'Elige fechas para ver el precio total', from: 'Desde', perNight: 'por noche', book: 'Reservar', adults: '{"one":"adulto","other":"adultos"}', adultsD: 'Desde {minAge} años', children: '{"one":"niño","other":"niños"}', childrenD: 'De {minAge} a {maxAge} años', childrenNo: 'No apto para niños', infants: '{"one":"bebé","other":"bebés"}', infantsD: 'Menores de {maxAge}', infantsNo: 'No apto para bebés', pets: '{"one":"mascota","other":"mascotas"}', petsNo: 'No se permiten', done: 'Listo' }
+  : { in: 'Check-in', out: 'Check-out', guests: 'Guests', one: '{{NumberOfGuests}} guest', many: '{{NumberOfGuests}} guests', loc: 'Location', total: 'Total price:', select: 'Select dates to see the total price', from: 'From', perNight: 'per night', book: 'Book now', adults: '{"one":"adult","other":"adults"}', adultsD: 'Ages {minAge} or above', children: '{"one":"child","other":"children"}', childrenD: 'Ages {minAge}-{maxAge}', childrenNo: 'Not suitable for children', infants: '{"one":"infant","other":"infants"}', infantsD: 'Under {maxAge}', infantsNo: 'Not suitable for infants', pets: '{"one":"pet","other":"pets"}', petsNo: 'Not allowed', done: 'Done' };
+const useWidget = lodgify.mode === 'widget' && !!rentalId;
+---
+{useWidget ? (
+  <div class="gs-search gs-ldg" data-ldg="book">
+    <div
+      id="lodgify-book-now-box"
+      data-rental-id={rentalId}
+      data-website-id={lodgify.websiteId}
+      data-slug={lodgify.websiteSlug}
+      data-language-code={lang}
+      data-new-tab="false"
+      data-version="stable"
+      data-has-guests-breakdown
+      data-check-in-label={L.in}
+      data-check-out-label={L.out}
+      data-guests-label={L.guests}
+      data-guests-singular-label={L.one}
+      data-guests-plural-label={L.many}
+      data-location-input-label={L.loc}
+      data-total-price-label={L.total}
+      data-select-dates-to-see-price-label={L.select}
+      data-minimum-price-per-night-first-label={L.from}
+      data-minimum-price-per-night-second-label={L.perNight}
+      data-book-button-label={L.book}
+      data-guests-breakdown-label={L.guests}
+      data-adults-label={L.adults}
+      data-adults-description={L.adultsD}
+      data-children-label={L.children}
+      data-children-description={L.childrenD}
+      data-children-not-allowed-label={L.childrenNo}
+      data-infants-label={L.infants}
+      data-infants-description={L.infantsD}
+      data-infants-not-allowed-label={L.infantsNo}
+      data-pets-label={L.pets}
+      data-pets-not-allowed-label={L.petsNo}
+      data-done-label={L.done}
+    ></div>
+    <div class="gs-ldg__fallback"><BookingSearch lang={lang} house={house} stack id={`book-${house}`} /></div>
+    <p class="gs-search__secure gs-ldg__secure"><Icon name="lock" />{t(lang).search.secure}</p>
+    <script is:inline defer src={lodgify.scripts.bookNow}></script>
+  </div>
+) : (
+  <BookingSearch lang={lang} house={house} stack id={`book-${house}`} />
+)}

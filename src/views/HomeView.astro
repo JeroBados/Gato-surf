@@ -1,0 +1,128 @@
+---
+import Base from '../layouts/Base.astro';
+import LodgifySearchBar from '../components/LodgifySearchBar.astro';
+import HouseCard from '../components/HouseCard.astro';
+import Cota from '../components/Cota.astro';
+import Icon from '../components/Icon.astro';
+import { houses, type Lang } from '../data/houses';
+import { routes, t } from '../i18n/ui';
+import { waLink } from '../config/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const meta = lang === 'en'
+  ? { title: 'Gato Surf Houses · Surf Houses 20 m from La Saladita Point', description: 'Four independent houses with a shared pool and Starlink, 20 m from the main point in La Saladita, Guerrero. Book direct with the hosts.' }
+  : { title: 'Gato Surf Houses · Casas a 20 m del point, La Saladita', description: 'Cuatro casas independientes con alberca compartida y Starlink, a 20 m del point principal de La Saladita, Guerrero. Reserva directo.' };
+const amenityIcons = ['pool', 'wifi', 'snow', 'board', 'flame', 'hammock', 'parking', 'paw'] as const;
+---
+<Base lang={lang} title={meta.title} description={meta.description} alt={routes.home}>
+  <section class="gs-wrap gs-hero" aria-labelledby="hero-title">
+    <div class="gs-hero__copy gs-reveal">
+      <p class="gs-eyebrow">{s.eyebrowPlace}</p>
+      <h1 class="gs-hero__title" id="hero-title">{s.heroTitle}</h1>
+      <p class="gs-lead">{s.heroLead}</p>
+      <Cota label={s.cota} />
+      <div class="gs-hero__ctas">
+        <a class="gs-btn gs-btn--secondary" href="#houses">{s.seeHouses}</a>
+        <a class="gs-link" href={waLink()} rel="noopener">{s.whatsappCta}</a>
+      </div>
+    </div>
+    <div class="gs-hero__media">
+      <div class="gs-photo gs-photo--arch gs-photo--4x5">
+        <img src="/images/hero.jpg" width="1200" height="1500" fetchpriority="high"
+          alt={lang === 'en' ? 'Two-storey palapa house reflected in the shared pool, coconut palms behind' : 'Casa de dos plantas con techo de palapa reflejada en la alberca, palmeras detrás'} />
+      </div>
+    </div>
+  </section>
+
+  <section class="gs-wrap" id="book" aria-label={s.search.title}>
+    <LodgifySearchBar lang={lang} />
+  </section>
+
+  <section class="gs-wrap gs-section" aria-label={lang === 'en' ? 'At a glance' : 'En cifras'}>
+    <ul class="gs-proof">
+      {s.proof.map(([v, l]) => <li><span class="gs-proof__value">{v}</span><span class="gs-proof__label">{l}</span></li>)}
+    </ul>
+  </section>
+
+  <section class="gs-wrap gs-section" id="houses" aria-labelledby="houses-title" style="padding-top:0">
+    <div class="gs-section-head">
+      <h2 class="gs-display-l" id="houses-title">{s.housesTitle}</h2>
+      <p class="gs-lead">{s.housesLead}</p>
+    </div>
+    <div class="gs-houses">
+      {houses.map((h) => <HouseCard house={h} lang={lang} />)}
+    </div>
+  </section>
+
+  <section class="gs-inverse" aria-labelledby="compound-title">
+    <div class="gs-wrap gs-section gs-split">
+      <div class="gs-split__copy">
+        <p class="gs-eyebrow">{s.compound.eyebrow}</p>
+        <h2 class="gs-display-l" id="compound-title">{s.compound.title}</h2>
+        <p>{s.compound.text}</p>
+        <ul class="gs-facts">
+          {s.compound.facts.map(([f, c]) => <li><span class="gs-facts__fig">{f}</span><span class="gs-facts__cap">{c}</span></li>)}
+        </ul>
+        <div class="gs-hero__ctas">
+          <a class="gs-btn gs-btn--inverse" href={waLink(s.compound.waText)} rel="noopener">{s.compound.cta}</a>
+          <a class="gs-link" style="color:var(--on-inverse)" href={routes.compound[lang]}>{s.compound.more}</a>
+        </div>
+      </div>
+      <div class="gs-photo gs-photo--3x2">
+        <img src="/images/small-exterior.jpg" width="1600" height="1067" loading="lazy" decoding="async"
+          alt={lang === 'en' ? 'Row of palapa houses in the garden at golden hour' : 'Fila de casas de palapa en el jardín al atardecer'} />
+      </div>
+    </div>
+  </section>
+
+  <section class="gs-wrap gs-section" aria-labelledby="amenities-title">
+    <div class="gs-split" style="align-items:start">
+      <div class="gs-section-head" style="margin:0">
+        <h2 class="gs-display-l" id="amenities-title">{s.amenitiesTitle}</h2>
+      </div>
+      <ul class="gs-amenities">
+        {s.amenities.map((a, i) => <li class="gs-amenity"><Icon name={amenityIcons[i]} /><span>{a}</span></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <div class="gs-wrap">
+    <div class="gs-photo gs-photo--3x2" style="aspect-ratio:21/9">
+      <img src="/images/pool-lounge.jpg" width="1600" height="1067" loading="lazy" decoding="async"
+        alt={lang === 'en' ? 'Shared pool and lounge under the pergola' : 'Alberca compartida y sala bajo la pérgola'} />
+    </div>
+  </div>
+
+  <section class="gs-wrap gs-section" id="services" aria-labelledby="services-title">
+    <div class="gs-section-head">
+      <h2 class="gs-display-l" id="services-title">{s.servicesTitle}</h2>
+      <p class="gs-lead">{s.servicesLead}</p>
+    </div>
+    <ul class="gs-services">
+      {s.services.map(([name, desc]) => (
+        <li class="gs-service">
+          <h3>{name}</h3>
+          <p>{desc}</p>
+          <a class="gs-link" href={waLink(`${name} — Gato Surf Houses`)} rel="noopener">{s.arrange}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="gs-section gs-section--sunk" aria-labelledby="place-title">
+    <div class="gs-wrap gs-split">
+      <div class="gs-photo gs-photo--3x2">
+        <img src="/images/garden-palms.jpg" width="1600" height="1067" loading="lazy" decoding="async"
+          alt={lang === 'en' ? 'Palm garden between the houses' : 'Jardín de palmeras entre las casas'} />
+      </div>
+      <div class="gs-split__copy">
+        <p class="gs-eyebrow">La Saladita</p>
+        <h2 class="gs-display-l" id="place-title">{s.placeTitle}</h2>
+        <p class="gs-lead">{s.placeText}</p>
+        <p><a class="gs-link" href={routes.saladita[lang]}>{s.placeLink}</a></p>
+      </div>
+    </div>
+  </section>
+</Base>

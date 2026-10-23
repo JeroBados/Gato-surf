@@ -1,0 +1,7 @@
+---
+import HouseView from "../../views/HouseView.astro";
+import { houses } from "../../data/houses";
+export function getStaticPaths() { return houses.map((house) => ({ params: { slug: house.slug }, props: { house } })); }
+const { house } = Astro.props;
+---
+<HouseView lang="en" house={house} />

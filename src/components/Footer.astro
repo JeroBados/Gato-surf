@@ -1,0 +1,48 @@
+---
+import { houses, type Lang } from '../data/houses';
+import { routes, t } from '../i18n/ui';
+import { site } from '../config/site';
+import wordmark from '../assets/brand/wordmark.svg?raw';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const year = new Date().getFullYear();
+---
+<footer class="gs-inverse">
+  <div class="gs-wrap gs-footer">
+    <div class="gs-footer__top">
+      <div class="gs-footer__brand">
+        <span set:html={wordmark} />
+        <p>{s.footer.blurb}</p>
+      </div>
+      <div>
+        <h3>{s.footer.houses}</h3>
+        <ul>
+          {houses.map((h) => <li><a href={routes.house[lang](h.slug)}>N.º {h.number} {h.name}</a></li>)}
+          <li><a href={routes.compound[lang]}>{s.footer.wholeCompound}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>{s.footer.stay}</h3>
+        <ul>
+          <li><a href={`${routes.home[lang]}#services`}>{s.nav.services}</a></li>
+          <li><a href={routes.saladita[lang]}>{s.nav.saladita}</a></li>
+          <li><a href={routes.privacy[lang]}>{s.footer.privacy}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>{s.footer.contact}</h3>
+        <ul>
+          <li><a href={site.whatsapp.link} rel="noopener">WhatsApp {site.whatsapp.number}</a></li>
+          <li><a href={site.instagram.url} rel="noopener">Instagram {site.instagram.handle}</a></li>
+          {site.email && <li><a href={`mailto:${site.email}`}>{site.email}</a></li>}
+          <li>{site.address.street}, {site.address.locality}, Gro. {site.address.postalCode}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="gs-footer__bottom">
+      <p>© {year} {site.name}</p>
+      <p>{s.footer.hosted} <a href={site.hostedBy.url} rel="noopener">{site.hostedBy.name}</a></p>
+    </div>
+  </div>
+</footer>

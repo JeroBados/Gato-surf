@@ -1,0 +1,9 @@
+---
+// La cota de 20 m: el único recurso gráfico propio de la marca. Una por vista, siempre con el número real.
+interface Props { label: string }
+const { label } = Astro.props;
+---
+<div class="gs-cota" role="img" aria-label={label}>
+  <div class="gs-cota__line" aria-hidden="true"><span class="gs-cota__end gs-cota__end--l"></span><span class="gs-cota__end gs-cota__end--r"></span></div>
+  <p class="gs-cota__label" aria-hidden="true">{label}</p>
+</div>

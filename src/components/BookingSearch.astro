@@ -1,0 +1,121 @@
+---
+// Buscador de disponibilidad. Lleva al huésped al motor de reservas de Lodgify con fechas y huéspedes.
+// Funciona sin JavaScript (formulario GET a la búsqueda de Lodgify); con JavaScript valida fechas y
+// capacidad y, si se eligió una casa, abre directamente la página de reserva de esa casa.
+// Es el respaldo de los widgets de Lodgify (LodgifySearchBar y LodgifyBookBox).
+import { lodgify } from '../config/lodgify';
+import { waLink } from '../config/site';
+import { houses, type Lang } from '../data/houses';
+import { t } from '../i18n/ui';
+import Icon from './Icon.astro';
+
+interface Props { lang: Lang; house?: string; stack?: boolean; id?: string }
+const { lang, house, stack = false, id = 'search' } = Astro.props;
+const s = t(lang).search;
+const action = new URL(lodgify.searchPath[lang], lodgify.bookingBase).toString();
+const config = {
+  lang,
+  base: lodgify.bookingBase,
+  search: lodgify.searchPath[lang],
+  properties: Object.fromEntries(Object.entries(lodgify.properties).map(([k, v]) => [k, v[lang]])),
+  params: lodgify.params,
+  currency: lodgify.currency,
+  capacity: Object.fromEntries(houses.map((h) => [h.slug, h.guests])),
+  msg: { dates: s.errDates, guests: houses.map((h) => [h.slug, s.errGuests(h.guests)]) },
+  groupLink: waLink(t(lang).compound.waText),
+};
+const p = lodgify.params;
+---
+  <div class:list={['gs-search', stack && 'gs-search--stack']} data-booking={JSON.stringify(config)}>
+    <form class="gs-search__form" action={action} method="get" novalidate aria-label={s.title}>
+      <div class="gs-field">
+        <label for={`${id}-in`}>{s.arrival}</label>
+        <input id={`${id}-in`} name={p.arrival} type="date" required />
+      </div>
+      <div class="gs-field">
+        <label for={`${id}-out`}>{s.departure}</label>
+        <input id={`${id}-out`} name={p.departure} type="date" required />
+      </div>
+      <div class="gs-field">
+        <label for={`${id}-guests`}>{s.guests}</label>
+        <select id={`${id}-guests`} name={p.adults}>
+          {[1, 2, 3, 4, 5, 6].map((n) => <option value={n} selected={n === 2}>{s.guestsN(n)}</option>)}
+          <option value="group">{lang === 'en' ? '7+ · group stay' : '7+ · grupo'}</option>
+        </select>
+      </div>
+      <div class="gs-field gs-field--wide">
+        <label for={`${id}-house`}>{s.house}</label>
+        <select id={`${id}-house`} data-house>
+          <option value="">{s.anyHouse}</option>
+          {houses.map((h) => <option value={h.slug} selected={h.slug === house}>N.º {h.number} · {h.name}</option>)}
+        </select>
+      </div>
+      <input type="hidden" name={p.children} value="0" />
+      <input type="hidden" name={p.infants} value="0" />
+      <input type="hidden" name={p.pets} value="0" />
+      <input type="hidden" name="currency" value={lodgify.currency} />
+      <button class="gs-btn gs-btn--primary" type="submit">{s.submit}</button>
+    </form>
+    <p class="gs-search__msg" role="alert" aria-live="polite"></p>
+    <p class="gs-search__secure"><Icon name="lock" />{s.secure}</p>
+  </div>
+
+<script>
+  type Cfg = {
+    lang: string; base: string; search: string; properties: Record<string, string>;
+    params: Record<string, string>; currency: string; capacity: Record<string, number>;
+    msg: { dates: string; guests: [string, string][] }; groupLink: string;
+  };
+  const iso = (d: Date) => d.toISOString().slice(0, 10);
+
+  document.querySelectorAll<HTMLElement>('[data-booking]').forEach((root) => {
+    const cfg: Cfg = JSON.parse(root.dataset.booking || '{}');
+    const form = root.querySelector('form')!;
+    const [arr, dep] = Array.from(form.querySelectorAll<HTMLInputElement>('input[type="date"]'));
+    const guests = form.querySelector<HTMLSelectElement>(`select[name="${cfg.params.adults}"]`)!;
+    const house = form.querySelector<HTMLSelectElement>('[data-house]')!;
+    const msg = root.querySelector<HTMLElement>('.gs-search__msg')!;
+    const guestMsgs = new Map(cfg.msg.guests);
+
+    const today = new Date();
+    arr.min = iso(today);
+    const syncDeparture = () => {
+      if (!arr.value) { dep.min = iso(new Date(today.getTime() + 864e5)); return; }
+      const next = new Date(arr.value + 'T12:00:00');
+      next.setDate(next.getDate() + 1);
+      dep.min = iso(next);
+      if (dep.value && dep.value <= arr.value) dep.value = iso(next);
+    };
+    syncDeparture();
+    arr.addEventListener('change', () => { syncDeparture(); if (!dep.value) dep.showPicker?.(); });
+
+    const fail = (text: string, el?: HTMLElement) => {
+      msg.textContent = text;
+      [arr, dep, guests, house].forEach((x) => x.removeAttribute('aria-invalid'));
+      if (el) { el.setAttribute('aria-invalid', 'true'); el.focus(); }
+    };
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      msg.textContent = '';
+      if (guests.value === 'group') { window.location.assign(cfg.groupLink); return; }
+      if (!arr.value) return fail(cfg.msg.dates, arr);
+      if (!dep.value || dep.value <= arr.value) return fail(cfg.msg.dates, dep);
+      const slug = house.value;
+      const n = Number(guests.value);
+      if (slug && n > (cfg.capacity[slug] ?? 6)) return fail(guestMsgs.get(slug) || '', guests);
+
+      const path = slug && cfg.properties[slug] ? cfg.properties[slug] : cfg.search;
+      const url = new URL(path, cfg.base);
+      const p = cfg.params;
+      url.searchParams.set(p.arrival, arr.value);
+      url.searchParams.set(p.departure, dep.value);
+      url.searchParams.set(p.adults, String(n));
+      url.searchParams.set(p.children, '0');
+      url.searchParams.set(p.infants, '0');
+      url.searchParams.set(p.pets, '0');
+      url.searchParams.set('currency', cfg.currency);
+      window.location.assign(url.toString());
+    });
+  });
+</script>

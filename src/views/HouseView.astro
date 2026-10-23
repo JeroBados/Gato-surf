@@ -1,0 +1,112 @@
+---
+import Base from '../layouts/Base.astro';
+import LodgifyBookBox from '../components/LodgifyBookBox.astro';
+import HouseCard from '../components/HouseCard.astro';
+import Cota from '../components/Cota.astro';
+import Icon from '../components/Icon.astro';
+import { houses, type House, type Lang } from '../data/houses';
+import { routes, t } from '../i18n/ui';
+import { site } from '../config/site';
+import { bookingUrl } from '../config/lodgify';
+
+interface Props { lang: Lang; house: House }
+const { lang, house } = Astro.props;
+const s = t(lang);
+const h = s.house;
+const title = lang === 'en'
+  ? `${house.name} · Gato Surf Houses, La Saladita`
+  : `${house.name} · Gato Surf Houses, La Saladita`;
+const description = lang === 'en'
+  ? `House N.º ${house.number} at Gato Surf Houses: ${house.bedrooms === 1 ? 'one bedroom' : 'two bedrooms'} for up to ${house.guests} guests, private terrace, shared pool and Starlink, 20 m from the point in La Saladita.`
+  : `Casa N.º ${house.number} de Gato Surf Houses: ${house.bedrooms === 1 ? 'una recámara' : 'dos recámaras'} para hasta ${house.guests} huéspedes, terraza privada, alberca compartida y Starlink, a 20 m del point de La Saladita.`;
+const alt = { en: routes.house.en(house.slug), es: routes.house.es(house.slug) };
+const others = houses.filter((x) => x.slug !== house.slug);
+const sharedIcons = ['pool', 'board', 'flame', 'hammock', 'parking', 'paw'] as const;
+const shared = [s.amenities[0], s.amenities[3], s.amenities[4], s.amenities[5], s.amenities[6], s.amenities[7]];
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'VacationRental',
+  name: `${house.name} · ${site.name}`,
+  identifier: house.slug,
+  image: house.gallery.map((g) => new URL(g.src, site.url).toString()),
+  address: { '@type': 'PostalAddress', streetAddress: site.address.street, addressLocality: site.address.locality, addressRegion: site.address.region, postalCode: site.address.postalCode, addressCountry: site.address.country },
+  containsPlace: { '@type': 'Accommodation', occupancy: { '@type': 'QuantitativeValue', maxValue: house.guests }, numberOfBedrooms: house.bedrooms, numberOfBathroomsTotal: house.baths },
+};
+---
+<Base lang={lang} title={title} description={description} alt={alt} current="houses" image={house.card} schema={schema}>
+  <div class="gs-wrap">
+    <p class="gs-crumb"><a href={`${routes.home[lang]}#houses`}>← {h.back}</a></p>
+    <header class="gs-house-head gs-reveal">
+      <p class="gs-eyebrow">N.º {house.number}</p>
+      <h1>{house.name}</h1>
+      <p class="gs-lead">{house.summary[lang]}</p>
+      <Cota label={s.cota} />
+    </header>
+
+    <div class="gs-gallery">
+      {house.gallery.map((g, i) => (
+        <figure>
+          <div class="gs-photo gs-photo--3x2">
+            <img src={g.src} alt={g.alt[lang]} width="1600" height="1067" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" fetchpriority={i === 0 ? 'high' : undefined} />
+          </div>
+        </figure>
+      ))}
+    </div>
+
+    <div class="gs-house-layout">
+      <div class="gs-house-main">
+        <dl class="gs-data">
+          <div><dt>{h.guests}</dt><dd>{house.guests}</dd></div>
+          <div><dt>{h.bedrooms}</dt><dd>{house.bedrooms}</dd></div>
+          <div><dt>{h.baths}</dt><dd>{house.baths}</dd></div>
+          <div><dt>{h.floors}</dt><dd>{house.levels}</dd></div>
+        </dl>
+
+        <section class="gs-block">
+          <h2>{h.facts}</h2>
+          <div class="gs-prose">{house.description.map((p) => <p>{p[lang]}</p>)}</div>
+          <ul class="gs-list">
+            {house.features.map((f) => <li>{f[lang]}</li>)}
+            <li><span class="gs-muted">{h.beds}:</span> {house.beds[lang]}</li>
+          </ul>
+        </section>
+
+        <section class="gs-block">
+          <h2>{h.shared}</h2>
+          <ul class="gs-amenities">
+            {shared.map((a, i) => <li class="gs-amenity"><Icon name={sharedIcons[i]} /><span>{a}</span></li>)}
+          </ul>
+        </section>
+
+        <section class="gs-block">
+          <h2>{h.rules}</h2>
+          <ul class="gs-list">{h.rulesList.map((r) => <li>{r}</li>)}</ul>
+        </section>
+
+        <section class="gs-block">
+          <h2>{h.location}</h2>
+          <p>{h.locationText}</p>
+          <p><a class="gs-link" href={site.geo.mapsUrl} rel="noopener">{h.maps}</a></p>
+        </section>
+      </div>
+
+      <aside aria-label={s.search.title}>
+        <div class="gs-book-card" id="book">
+          <p class="gs-eyebrow">{s.search.title}</p>
+          <LodgifyBookBox lang={lang} house={house.slug} />
+          <a class="gs-btn gs-btn--secondary gs-btn--block" href={bookingUrl({ lang, house: house.slug })} rel="noopener">{h.bookThis}</a>
+          <p class="gs-small gs-muted">{s.search.times}</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <section class="gs-section gs-section--sunk" aria-labelledby="others-title">
+    <div class="gs-wrap">
+      <div class="gs-section-head"><h2 class="gs-display-m" id="others-title">{h.others}</h2></div>
+      <div class="gs-houses" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,16rem),1fr))">
+        {others.map((o) => <HouseCard house={o} lang={lang} />)}
+      </div>
+    </div>
+  </section>
+</Base>

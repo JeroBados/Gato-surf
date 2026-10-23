@@ -1,0 +1,92 @@
+---
+import Base from '../layouts/Base.astro';
+import HouseCard from '../components/HouseCard.astro';
+import Cota from '../components/Cota.astro';
+import LodgifySearchBar from '../components/LodgifySearchBar.astro';
+import { houses, type Lang } from '../data/houses';
+import { routes, t } from '../i18n/ui';
+import { waLink } from '../config/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang);
+const c = lang === 'en'
+  ? {
+      title: 'Group Stays · Gato Surf Houses, La Saladita',
+      description: "Book two, three or all four houses together: up to 18 guests around one pool, 20 m from La Saladita's point. For families, friends and surf retreats.",
+      h1: 'Group stays.',
+      lead: 'Two, three or all four houses, booked together around the same pool, with the point twenty meters away.',
+      how: 'How it works',
+      steps: [
+        ['Tell us your dates and group size', 'Message us on WhatsApp. We check availability across the four houses on the same calendar.'],
+        ['We send you a single quote', 'The houses you need together, with any services you want arranged before you arrive: lessons, boards, transfers, chef.'],
+        ['You book and pay securely', 'The booking is confirmed through Lodgify, our booking system.'],
+      ],
+      fit: 'Who it works for',
+      fitList: ['Surf retreats and coaching weeks', 'Families travelling together', 'Groups of friends', 'Yoga and wellness retreats, using the shared terrace'],
+    }
+  : {
+      title: 'Grupos · Gato Surf Houses, La Saladita',
+      description: 'Reserva dos, tres o las cuatro casas juntas: hasta 18 huéspedes alrededor de una alberca, a 20 m del point de La Saladita. Para familias, amigos y retiros de surf.',
+      h1: 'Grupos.',
+      lead: 'Dos, tres o las cuatro casas, reservadas juntas alrededor de la misma alberca, con el point a veinte metros.',
+      how: 'Cómo funciona',
+      steps: [
+        ['Cuéntanos fechas y tamaño del grupo', 'Escríbenos por WhatsApp. Revisamos la disponibilidad de las cuatro casas en el mismo calendario.'],
+        ['Te mandamos una sola cotización', 'Las casas que necesites juntas, con los servicios que quieras resueltos antes de llegar: clases, tablas, traslados, chef.'],
+        ['Reservas y pagas de forma segura', 'La reserva se confirma a través de Lodgify, nuestro sistema de reservas.'],
+      ],
+      fit: 'Para quién funciona',
+      fitList: ['Retiros y semanas de coaching de surf', 'Familias que viajan juntas', 'Grupos de amigos', 'Retiros de yoga y bienestar, usando la terraza común'],
+    };
+---
+<Base lang={lang} title={c.title} description={c.description} alt={routes.compound} current="compound" image="/images/small-exterior.jpg">
+  <div class="gs-wrap">
+    <header class="gs-house-head gs-reveal" style="padding-top:var(--space-16)">
+      <p class="gs-eyebrow">{s.compound.eyebrow}</p>
+      <h1>{c.h1}</h1>
+      <p class="gs-lead">{c.lead}</p>
+      <Cota label={s.cota} />
+    </header>
+    <div class="gs-photo gs-photo--3x2" style="aspect-ratio:21/9">
+      <img src="/images/pool-day.jpg" width="1600" height="1067" fetchpriority="high"
+        alt={lang === 'en' ? 'The shared pool with the palapa houses around it' : 'La alberca compartida con las casas de palapa alrededor'} />
+    </div>
+  </div>
+
+  <section class="gs-wrap" id="book" style="padding-top:var(--space-12)" aria-label={s.search.title}>
+    <p class="gs-eyebrow" style="margin-bottom:var(--space-3)">{lang === 'en' ? 'See which houses are free on your dates' : 'Mira qué casas están libres en tus fechas'}</p>
+    <LodgifySearchBar lang={lang} />
+  </section>
+
+  <section class="gs-wrap gs-section">
+    <div class="gs-split" style="align-items:start">
+      <div class="gs-split__copy">
+        <ul class="gs-facts">
+          {s.compound.facts.map(([f, cap]) => <li><span class="gs-facts__fig" style="color:var(--ink-display)">{f}</span><span class="gs-facts__cap">{cap}</span></li>)}
+        </ul>
+        <h2 class="gs-display-m">{c.fit}</h2>
+        <ul class="gs-list">{c.fitList.map((x) => <li>{x}</li>)}</ul>
+      </div>
+      <div class="gs-split__copy">
+        <h2 class="gs-display-m">{c.how}</h2>
+        <ol class="gs-list" style="list-style:none;padding:0;margin:0">
+          {c.steps.map(([a, b], i) => (
+            <li style="display:grid;grid-template-columns:3rem 1fr;gap:var(--space-3)">
+              <span class="gs-proof__value" style="font-size:32px">{i + 1}</span>
+              <span><strong style="font-weight:600">{a}</strong><br /><span class="gs-muted">{b}</span></span>
+            </li>
+          ))}
+        </ol>
+        <div><a class="gs-btn gs-btn--primary" href={waLink(s.compound.waText)} rel="noopener">{s.compound.cta}</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gs-section gs-section--sunk">
+    <div class="gs-wrap">
+      <div class="gs-section-head"><h2 class="gs-display-m">{s.housesTitle}</h2></div>
+      <div class="gs-houses">{houses.map((h) => <HouseCard house={h} lang={lang} />)}</div>
+    </div>
+  </section>
+</Base>
