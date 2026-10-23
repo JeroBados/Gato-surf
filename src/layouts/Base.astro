@@ -16,29 +16,39 @@ interface Props {
   current?: 'houses' | 'compound' | 'saladita';
   image?: string;
   schema?: Record<string, unknown>;
+  noindex?: boolean;
+  keywords?: string;
 }
-const { lang, title, description, alt, current, image = '/images/og.jpg', schema } = Astro.props;
+const { lang, title, description, alt, current, image = '/images/og.jpg', schema, noindex = false, keywords } = Astro.props;
 const canonical = new URL(alt[lang], site.url).toString();
+const ogImage = new URL(image, site.url).toString();
 const s = t(lang);
-const business = {
+const defaultSchema = {
   '@context': 'https://schema.org',
-  '@type': 'LodgingBusiness',
-  name: site.name,
-  url: site.url,
-  image: new URL('/images/hero.jpg', site.url).toString(),
-  telephone: site.whatsapp.number,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: site.address.street,
-    addressLocality: site.address.locality,
-    addressRegion: site.address.region,
-    postalCode: site.address.postalCode,
-    addressCountry: site.address.country,
-  },
-  checkinTime: '15:00',
-  checkoutTime: '11:00',
-  petsAllowed: true,
-  aggregateRating: { '@type': 'AggregateRating', ratingValue: site.rating.value, reviewCount: site.rating.count },
+  '@graph': [
+    {
+      '@type': 'LodgingBusiness',
+      '@id': `${site.url}/#business`,
+      name: site.name,
+      url: site.url,
+      image: new URL('/images/hero.jpg', site.url).toString(),
+      telephone: site.whatsapp.number,
+      email: site.email,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: site.address.street,
+        addressLocality: site.address.locality,
+        addressRegion: site.address.region,
+        postalCode: site.address.postalCode,
+        addressCountry: site.address.country,
+      },
+      geo: { '@type': 'GeoCoordinates', latitude: site.geo.lat, longitude: site.geo.lng },
+      checkinTime: '15:00',
+      checkoutTime: '11:00',
+      petsAllowed: true,
+      aggregateRating: { '@type': 'AggregateRating', ratingValue: site.rating.value, reviewCount: site.rating.count },
+    },
+  ],
 };
 ---
 <!doctype html>
@@ -48,6 +58,8 @@ const business = {
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>{title}</title>
   <meta name="description" content={description} />
+  {keywords && <meta name="keywords" content={keywords} />}
+  <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
   <link rel="canonical" href={canonical} />
   <link rel="alternate" hreflang="en" href={new URL(alt.en, site.url).toString()} />
   <link rel="alternate" hreflang="es" href={new URL(alt.es, site.url).toString()} />
@@ -57,16 +69,26 @@ const business = {
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonical} />
-  <meta property="og:image" content={new URL(image, site.url).toString()} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:alt" content={title} />
   <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'es_MX'} />
+  <meta property="og:locale:alternate" content={lang === 'en' ? 'es_MX' : 'en_US'} />
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+  <meta name="twitter:site" content={site.instagram.handle} />
+  <meta name="geo.region" content="MX-GRO" />
+  <meta name="geo.placename" content="La Saladita" />
+  <meta name="geo.position" content={`${site.geo.lat};${site.geo.lng}`} />
+  <meta name="ICBM" content={`${site.geo.lat}, ${site.geo.lng}`} />
   <meta name="theme-color" content="#f4f0e8" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="preload" href="/fonts/InstrumentSerif-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/fonts/HankenGrotesk-400.woff2" as="font" type="font/woff2" crossorigin />
-  <script type="application/ld+json" set:html={JSON.stringify(schema ?? business)} />
+  <script type="application/ld+json" set:html={JSON.stringify(schema ?? defaultSchema)} />
 </head>
 <body>
   <a class="gs-skip" href="#main">{lang === 'en' ? 'Skip to content' : 'Ir al contenido'}</a>
@@ -74,5 +96,8 @@ const business = {
   <main id="main"><slot /></main>
   <Footer lang={lang} />
   <a class="gs-wa" href={site.whatsapp.link} rel="noopener" aria-label={s.whatsappLabel}><Icon name="chat" />{s.whatsapp}</a>
+  <script>
+    import '../scripts/motion.ts';
+  </script>
 </body>
 </html>

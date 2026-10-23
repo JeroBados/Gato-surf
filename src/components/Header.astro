@@ -15,7 +15,7 @@ const links = [
   { key: 'saladita', href: routes.saladita[lang], label: s.saladita },
 ];
 ---
-<header class="gs-header">
+<header class="gs-header" data-header>
   <div class="gs-wrap gs-header__in">
     <a class="gs-logo" href={home} aria-label="Gato Surf Houses" set:html={lockup} />
     <nav aria-label={lang === 'en' ? 'Main' : 'Principal'}>

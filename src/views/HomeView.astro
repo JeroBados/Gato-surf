@@ -3,22 +3,33 @@ import Base from '../layouts/Base.astro';
 import LodgifySearchBar from '../components/LodgifySearchBar.astro';
 import HouseCard from '../components/HouseCard.astro';
 import Cota from '../components/Cota.astro';
+import Faq from '../components/Faq.astro';
 import Icon from '../components/Icon.astro';
 import { houses, type Lang } from '../data/houses';
 import { routes, t } from '../i18n/ui';
 import { waLink } from '../config/site';
+import { faqPage, graph, itemList } from '../lib/schema';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const s = t(lang);
 const meta = lang === 'en'
-  ? { title: 'Gato Surf Houses · Surf Houses 20 m from La Saladita Point', description: 'Four independent houses with a shared pool and Starlink, 20 m from the main point in La Saladita, Guerrero. Book direct with the hosts.' }
-  : { title: 'Gato Surf Houses · Casas a 20 m del point, La Saladita', description: 'Cuatro casas independientes con alberca compartida y Starlink, a 20 m del point principal de La Saladita, Guerrero. Reserva directo.' };
+  ? {
+      title: 'Gato Surf Houses · Villas & Surf Houses in La Saladita, Mexico',
+      description: 'Rent four independent villas and surf houses 20 m from the point in La Saladita, Guerrero. Shared pool, Starlink, Superhost. Book direct.',
+      keywords: 'villas La Saladita, surf houses La Saladita, rent villa Guerrero, Gato Surf Houses, surf accommodation Mexico',
+    }
+  : {
+      title: 'Gato Surf Houses · Renta villas en La Saladita, Guerrero',
+      description: 'Renta villas y casas de surf a 20 m del point en La Saladita, Guerrero. Alberca compartida, Starlink, Superhost en Airbnb. Reserva directo.',
+      keywords: 'renta villas La Saladita, villas La Saladita, casas de surf Guerrero, Gato Surf Houses, alojamiento surf México',
+    };
 const amenityIcons = ['pool', 'wifi', 'snow', 'board', 'flame', 'hammock', 'parking', 'paw'] as const;
+const schema = graph([itemList(), faqPage([...s.faq])]);
 ---
-<Base lang={lang} title={meta.title} description={meta.description} alt={routes.home}>
+<Base lang={lang} title={meta.title} description={meta.description} keywords={meta.keywords} alt={routes.home} schema={schema}>
   <section class="gs-wrap gs-hero" aria-labelledby="hero-title">
-    <div class="gs-hero__copy gs-reveal">
+    <div class="gs-hero__copy">
       <p class="gs-eyebrow">{s.eyebrowPlace}</p>
       <h1 class="gs-hero__title" id="hero-title">{s.heroTitle}</h1>
       <p class="gs-lead">{s.heroLead}</p>
@@ -29,36 +40,36 @@ const amenityIcons = ['pool', 'wifi', 'snow', 'board', 'flame', 'hammock', 'park
       </div>
     </div>
     <div class="gs-hero__media">
-      <div class="gs-photo gs-photo--arch gs-photo--4x5">
+      <div class="gs-photo gs-photo--arch gs-photo--4x5" data-parallax>
         <img src="/images/hero.jpg" width="1200" height="1500" fetchpriority="high"
-          alt={lang === 'en' ? 'Two-storey palapa house reflected in the shared pool, coconut palms behind' : 'Casa de dos plantas con techo de palapa reflejada en la alberca, palmeras detrás'} />
+          alt={lang === 'en' ? 'Villa with palapa roof and shared pool at Gato Surf Houses, La Saladita' : 'Villa con techo de palapa y alberca compartida en Gato Surf Houses, La Saladita'} />
       </div>
     </div>
   </section>
 
-  <section class="gs-wrap" id="book" aria-label={s.search.title}>
+  <section class="gs-wrap" id="book" aria-label={s.search.title} data-reveal>
     <LodgifySearchBar lang={lang} />
   </section>
 
-  <section class="gs-wrap gs-section" aria-label={lang === 'en' ? 'At a glance' : 'En cifras'}>
+  <section class="gs-wrap gs-section" aria-label={lang === 'en' ? 'At a glance' : 'En cifras'} data-reveal>
     <ul class="gs-proof">
       {s.proof.map(([v, l]) => <li><span class="gs-proof__value">{v}</span><span class="gs-proof__label">{l}</span></li>)}
     </ul>
   </section>
 
   <section class="gs-wrap gs-section" id="houses" aria-labelledby="houses-title" style="padding-top:0">
-    <div class="gs-section-head">
+    <div class="gs-section-head" data-reveal>
       <h2 class="gs-display-l" id="houses-title">{s.housesTitle}</h2>
       <p class="gs-lead">{s.housesLead}</p>
     </div>
     <div class="gs-houses">
-      {houses.map((h) => <HouseCard house={h} lang={lang} />)}
+      {houses.map((h, i) => <HouseCard house={h} lang={lang} index={i} />)}
     </div>
   </section>
 
   <section class="gs-inverse" aria-labelledby="compound-title">
     <div class="gs-wrap gs-section gs-split">
-      <div class="gs-split__copy">
+      <div class="gs-split__copy" data-reveal>
         <p class="gs-eyebrow">{s.compound.eyebrow}</p>
         <h2 class="gs-display-l" id="compound-title">{s.compound.title}</h2>
         <p>{s.compound.text}</p>
@@ -70,14 +81,14 @@ const amenityIcons = ['pool', 'wifi', 'snow', 'board', 'flame', 'hammock', 'park
           <a class="gs-link" style="color:var(--on-inverse)" href={routes.compound[lang]}>{s.compound.more}</a>
         </div>
       </div>
-      <div class="gs-photo gs-photo--3x2">
+      <div class="gs-photo gs-photo--3x2" data-reveal style="--reveal-i:1" data-parallax>
         <img src="/images/small-exterior.jpg" width="1600" height="1067" loading="lazy" decoding="async"
-          alt={lang === 'en' ? 'Row of palapa houses in the garden at golden hour' : 'Fila de casas de palapa en el jardín al atardecer'} />
+          alt={lang === 'en' ? 'Row of palapa villas in the garden at Gato Surf Houses, La Saladita' : 'Fila de villas de palapa en el jardín de Gato Surf Houses, La Saladita'} />
       </div>
     </div>
   </section>
 
-  <section class="gs-wrap gs-section" aria-labelledby="amenities-title">
+  <section class="gs-wrap gs-section" aria-labelledby="amenities-title" data-reveal>
     <div class="gs-split" style="align-items:start">
       <div class="gs-section-head" style="margin:0">
         <h2 class="gs-display-l" id="amenities-title">{s.amenitiesTitle}</h2>
@@ -88,21 +99,21 @@ const amenityIcons = ['pool', 'wifi', 'snow', 'board', 'flame', 'hammock', 'park
     </div>
   </section>
 
-  <div class="gs-wrap">
-    <div class="gs-photo gs-photo--3x2" style="aspect-ratio:21/9">
+  <div class="gs-wrap" data-reveal>
+    <div class="gs-photo gs-photo--3x2" style="aspect-ratio:21/9" data-parallax>
       <img src="/images/pool-lounge.jpg" width="1600" height="1067" loading="lazy" decoding="async"
-        alt={lang === 'en' ? 'Shared pool and lounge under the pergola' : 'Alberca compartida y sala bajo la pérgola'} />
+        alt={lang === 'en' ? 'Shared pool and lounge under the pergola at the La Saladita villas' : 'Alberca compartida y sala bajo la pérgola en las villas de La Saladita'} />
     </div>
   </div>
 
   <section class="gs-wrap gs-section" id="services" aria-labelledby="services-title">
-    <div class="gs-section-head">
+    <div class="gs-section-head" data-reveal>
       <h2 class="gs-display-l" id="services-title">{s.servicesTitle}</h2>
       <p class="gs-lead">{s.servicesLead}</p>
     </div>
     <ul class="gs-services">
-      {s.services.map(([name, desc]) => (
-        <li class="gs-service">
+      {s.services.map(([name, desc], i) => (
+        <li class="gs-service" data-reveal style={`--reveal-i:${i}`}>
           <h3>{name}</h3>
           <p>{desc}</p>
           <a class="gs-link" href={waLink(`${name} — Gato Surf Houses`)} rel="noopener">{s.arrange}</a>
@@ -113,11 +124,11 @@ const amenityIcons = ['pool', 'wifi', 'snow', 'board', 'flame', 'hammock', 'park
 
   <section class="gs-section gs-section--sunk" aria-labelledby="place-title">
     <div class="gs-wrap gs-split">
-      <div class="gs-photo gs-photo--3x2">
+      <div class="gs-photo gs-photo--3x2" data-reveal data-parallax>
         <img src="/images/garden-palms.jpg" width="1600" height="1067" loading="lazy" decoding="async"
-          alt={lang === 'en' ? 'Palm garden between the houses' : 'Jardín de palmeras entre las casas'} />
+          alt={lang === 'en' ? 'Palm garden between the surf villas in La Saladita' : 'Jardín de palmeras entre las villas de surf en La Saladita'} />
       </div>
-      <div class="gs-split__copy">
+      <div class="gs-split__copy" data-reveal style="--reveal-i:1">
         <p class="gs-eyebrow">La Saladita</p>
         <h2 class="gs-display-l" id="place-title">{s.placeTitle}</h2>
         <p class="gs-lead">{s.placeText}</p>
@@ -125,4 +136,6 @@ const amenityIcons = ['pool', 'wifi', 'snow', 'board', 'flame', 'hammock', 'park
       </div>
     </div>
   </section>
+
+  <Faq title={s.faqTitle} items={s.faq} />
 </Base>

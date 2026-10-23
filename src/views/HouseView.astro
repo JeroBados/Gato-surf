@@ -8,42 +8,38 @@ import { houses, type House, type Lang } from '../data/houses';
 import { routes, t } from '../i18n/ui';
 import { site } from '../config/site';
 import { bookingUrl } from '../config/lodgify';
+import { houseGraph } from '../lib/schema';
 
 interface Props { lang: Lang; house: House }
 const { lang, house } = Astro.props;
 const s = t(lang);
 const h = s.house;
+const kind = house.size === 'large'
+  ? (lang === 'en' ? 'villa' : 'villa')
+  : (lang === 'en' ? 'surf house' : 'casa de surf');
 const title = lang === 'en'
-  ? `${house.name} · Gato Surf Houses, La Saladita`
-  : `${house.name} · Gato Surf Houses, La Saladita`;
+  ? `${house.name} · ${kind === 'villa' ? 'Villa' : 'Surf house'} in La Saladita | Gato Surf Houses`
+  : `${house.name} · ${kind === 'villa' ? 'Villa' : 'Casa de surf'} en La Saladita | Gato Surf Houses`;
 const description = lang === 'en'
-  ? `House N.º ${house.number} at Gato Surf Houses: ${house.bedrooms === 1 ? 'one bedroom' : 'two bedrooms'} for up to ${house.guests} guests, private terrace, shared pool and Starlink, 20 m from the point in La Saladita.`
-  : `Casa N.º ${house.number} de Gato Surf Houses: ${house.bedrooms === 1 ? 'una recámara' : 'dos recámaras'} para hasta ${house.guests} huéspedes, terraza privada, alberca compartida y Starlink, a 20 m del point de La Saladita.`;
+  ? `Rent ${house.name}, a ${house.bedrooms}-bedroom ${kind} for ${house.guests} guests at Gato Surf Houses. Private terrace, shared pool and Starlink, 20 m from the point in La Saladita, Guerrero.`
+  : `Renta ${house.name}, ${kind} de ${house.bedrooms} recámara${house.bedrooms > 1 ? 's' : ''} para ${house.guests} huéspedes en Gato Surf Houses. Terraza privada, alberca y Starlink, a 20 m del point en La Saladita, Guerrero.`;
 const alt = { en: routes.house.en(house.slug), es: routes.house.es(house.slug) };
 const others = houses.filter((x) => x.slug !== house.slug);
 const sharedIcons = ['pool', 'board', 'flame', 'hammock', 'parking', 'paw'] as const;
 const shared = [s.amenities[0], s.amenities[3], s.amenities[4], s.amenities[5], s.amenities[6], s.amenities[7]];
-const schema = {
-  '@context': 'https://schema.org',
-  '@type': 'VacationRental',
-  name: `${house.name} · ${site.name}`,
-  identifier: house.slug,
-  image: house.gallery.map((g) => new URL(g.src, site.url).toString()),
-  address: { '@type': 'PostalAddress', streetAddress: site.address.street, addressLocality: site.address.locality, addressRegion: site.address.region, postalCode: site.address.postalCode, addressCountry: site.address.country },
-  containsPlace: { '@type': 'Accommodation', occupancy: { '@type': 'QuantitativeValue', maxValue: house.guests }, numberOfBedrooms: house.bedrooms, numberOfBathroomsTotal: house.baths },
-};
+const schema = houseGraph(house, lang);
 ---
 <Base lang={lang} title={title} description={description} alt={alt} current="houses" image={house.card} schema={schema}>
   <div class="gs-wrap">
     <p class="gs-crumb"><a href={`${routes.home[lang]}#houses`}>← {h.back}</a></p>
-    <header class="gs-house-head gs-reveal">
+    <header class="gs-house-head">
       <p class="gs-eyebrow">N.º {house.number}</p>
       <h1>{house.name}</h1>
       <p class="gs-lead">{house.summary[lang]}</p>
       <Cota label={s.cota} />
     </header>
 
-    <div class="gs-gallery">
+    <div class="gs-gallery" data-reveal>
       {house.gallery.map((g, i) => (
         <figure>
           <div class="gs-photo gs-photo--3x2">
@@ -54,7 +50,7 @@ const schema = {
     </div>
 
     <div class="gs-house-layout">
-      <div class="gs-house-main">
+      <div class="gs-house-main" data-reveal>
         <dl class="gs-data">
           <div><dt>{h.guests}</dt><dd>{house.guests}</dd></div>
           <div><dt>{h.bedrooms}</dt><dd>{house.bedrooms}</dd></div>
@@ -90,7 +86,7 @@ const schema = {
         </section>
       </div>
 
-      <aside aria-label={s.search.title}>
+      <aside aria-label={s.search.title} data-reveal style="--reveal-i:1">
         <div class="gs-book-card" id="book">
           <p class="gs-eyebrow">{s.search.title}</p>
           <LodgifyBookBox lang={lang} house={house.slug} />
@@ -105,7 +101,7 @@ const schema = {
     <div class="gs-wrap">
       <div class="gs-section-head"><h2 class="gs-display-m" id="others-title">{h.others}</h2></div>
       <div class="gs-houses" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,16rem),1fr))">
-        {others.map((o) => <HouseCard house={o} lang={lang} />)}
+        {others.map((o, i) => <HouseCard house={o} lang={lang} index={i} />)}
       </div>
     </div>
   </section>

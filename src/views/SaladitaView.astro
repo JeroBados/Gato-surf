@@ -1,17 +1,19 @@
 ---
 import Base from '../layouts/Base.astro';
 import Cota from '../components/Cota.astro';
+import Faq from '../components/Faq.astro';
 import { type Lang } from '../data/houses';
 import { routes, t } from '../i18n/ui';
 import { site, waLink } from '../config/site';
+import { breadcrumbs, graph } from '../lib/schema';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const s = t(lang);
 const c = lang === 'en'
   ? {
-      title: 'La Saladita, Guerrero · Gato Surf Houses',
-      description: 'A small surf village 45 minutes from Zihuatanejo, known for a long, friendly left. How to get there and what to know before you come.',
+      title: 'La Saladita, Guerrero · Surf villas 20 m from the point',
+      description: 'La Saladita is a surf village 45 minutes from Zihuatanejo. Stay in Gato Surf Houses villas, 20 m from the long left. How to get here and what to know.',
       h1: 'La Saladita.',
       lead: 'A small surf village on the Pacific coast of Guerrero, about 45 minutes from Zihuatanejo. Quiet, green, and known for a long left-hand wave.',
       blocks: [
@@ -23,8 +25,8 @@ const c = lang === 'en'
       ],
     }
   : {
-      title: 'La Saladita, Guerrero · Gato Surf Houses',
-      description: 'Un pueblo surfero a 45 minutos de Zihuatanejo, conocido por una izquierda larga y amable. Cómo llegar y qué saber antes de venir.',
+      title: 'La Saladita, Guerrero · Renta villas a 20 m del point',
+      description: 'La Saladita es un pueblo surfero a 45 min de Zihuatanejo. Quédate en las villas de Gato Surf Houses, a 20 m de la izquierda. Cómo llegar y qué saber.',
       h1: 'La Saladita.',
       lead: 'Un pueblo surfero en la costa del Pacífico de Guerrero, a unos 45 minutos de Zihuatanejo. Tranquilo, verde y conocido por una ola izquierda larga.',
       blocks: [
@@ -35,24 +37,45 @@ const c = lang === 'en'
         ['Más allá del surf', 'Yoga frente al mar, masajes y terapias holísticas, mariscos frescos en los restaurantes de la playa, avistamiento de aves y caminatas por la selva, paseos al atardecer.'],
       ],
     };
+const schema = graph([
+  breadcrumbs(lang, [
+    { name: site.name, path: routes.home[lang] },
+    { name: 'La Saladita', path: routes.saladita[lang] },
+  ]),
+  {
+    '@type': 'TouristDestination',
+    name: 'La Saladita',
+    description: c.description,
+    url: new URL(routes.saladita[lang], site.url).toString(),
+    touristType: ['Surfer', 'Family', 'Couple'],
+    geo: { '@type': 'GeoCoordinates', latitude: site.geo.lat, longitude: site.geo.lng },
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: site.address.locality,
+      addressRegion: site.address.region,
+      addressCountry: site.address.country,
+    },
+  },
+]);
 ---
-<Base lang={lang} title={c.title} description={c.description} alt={routes.saladita} current="saladita" image="/images/garden-palms.jpg">
+<Base lang={lang} title={c.title} description={c.description} alt={routes.saladita} current="saladita" image="/images/garden-palms.jpg" schema={schema}>
   <div class="gs-wrap">
-    <header class="gs-house-head gs-reveal" style="padding-top:var(--space-16)">
+    <header class="gs-house-head" style="padding-top:var(--space-16)">
       <p class="gs-eyebrow">{s.eyebrowPlace}</p>
       <h1>{c.h1}</h1>
       <p class="gs-lead">{c.lead}</p>
       <Cota label={s.cota} />
     </header>
-    <div class="gs-photo gs-photo--3x2" style="aspect-ratio:21/9">
+    <div class="gs-photo gs-photo--3x2" style="aspect-ratio:21/9" data-reveal data-parallax>
       <img src="/images/garden-palms.jpg" width="1600" height="1067" fetchpriority="high"
-        alt={lang === 'en' ? 'Palm garden at Gato Surf Houses' : 'Jardín de palmeras en Gato Surf Houses'} />
+        alt={lang === 'en' ? 'Palm garden at Gato Surf Houses villas in La Saladita' : 'Jardín de palmeras en las villas de Gato Surf Houses, La Saladita'} />
     </div>
   </div>
   <section class="gs-wrap gs-section">
     <ul class="gs-services">
-      {c.blocks.map(([a, b]) => <li class="gs-service" style="grid-template-columns:minmax(0,16rem) minmax(0,1fr)"><h3>{a}</h3><p style="font-size:17px;line-height:27px;color:var(--ink)">{b}</p></li>)}
+      {c.blocks.map(([a, b], i) => <li class="gs-service" data-reveal style={`--reveal-i:${i};grid-template-columns:minmax(0,16rem) minmax(0,1fr)`}><h3>{a}</h3><p style="font-size:17px;line-height:27px;color:var(--ink)">{b}</p></li>)}
     </ul>
-    <p style="margin-top:var(--space-12)"><a class="gs-btn gs-btn--primary" href={waLink()} rel="noopener">{s.whatsappCta}</a> <span class="gs-muted gs-small" style="margin-left:var(--space-3)">{site.whatsapp.number}</span></p>
+    <p style="margin-top:var(--space-12)" data-reveal><a class="gs-btn gs-btn--primary" href={waLink()} rel="noopener">{s.whatsappCta}</a> <span class="gs-muted gs-small" style="margin-left:var(--space-3)">{site.whatsapp.number}</span></p>
   </section>
+  <Faq title={s.faqTitle} items={s.faq} />
 </Base>

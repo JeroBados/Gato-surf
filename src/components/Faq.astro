@@ -1,0 +1,19 @@
+---
+interface Item { q: string; a: string }
+interface Props { title: string; items: readonly Item[] }
+const { title, items } = Astro.props;
+---
+<section class="gs-wrap gs-section" data-reveal aria-labelledby="faq-title">
+  <div class="gs-section-head">
+    <p class="gs-eyebrow">FAQ</p>
+    <h2 class="gs-display-l" id="faq-title">{title}</h2>
+  </div>
+  <dl class="gs-faq">
+    {items.map((item) => (
+      <div class="gs-faq__item">
+        <dt><h3>{item.q}</h3></dt>
+        <dd>{item.a}</dd>
+      </div>
+    ))}
+  </dl>
+</section>

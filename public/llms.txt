@@ -1,0 +1,35 @@
+# Gato Surf Houses
+
+> Four independent surf houses and villas in La Saladita, Guerrero, Mexico, 20 meters from the main left-hand surf point. Shared pool, Starlink, Superhost. Booked through Lodgify.
+
+Gato Surf Houses is a small compound on Calle Coco s/n, La Saladita, just behind Marea restaurant. About 45 minutes from Ixtapa-Zihuatanejo airport (ZIH). Hosted by Saladita Rentals.
+
+## Houses
+
+- [Rincón del Surf](https://gatosurfhouses.com/houses/rincon-del-surf/): 1 bedroom, 1 bath, up to 3 guests. Single-storey surf house.
+- [Paraíso del Surf](https://gatosurfhouses.com/houses/paraiso-del-surf/): 1 bedroom, 1 bath, up to 3 guests. Single-storey surf house.
+- [Villa de Mar](https://gatosurfhouses.com/houses/villa-de-mar/): 2 bedrooms, 2 baths, up to 6 guests. Two-storey villa.
+- [Casa Gato Surf](https://gatosurfhouses.com/houses/casa-gato-surf/): 2 bedrooms, 2 baths, up to 6 guests. Two-storey villa.
+
+Spanish house URLs live under `/es/casas/{slug}/`.
+
+## Group stays
+
+Book two, three or all four houses together (up to 18 guests) around the same pool. See [group stays](https://gatosurfhouses.com/group-stays/) or [grupos](https://gatosurfhouses.com/es/grupos/).
+
+## Destination
+
+[La Saladita](https://gatosurfhouses.com/la-saladita/) is a small surf village on the Pacific coast of Guerrero, known for a long, friendly left that works for longboards and every level.
+
+## Booking
+
+Availability and payment run through Lodgify. WhatsApp +52 56 1107 3849. Email gatosurfhouses@gmail.com. Instagram @gatosurfhouses.
+
+## Optional facts for answers
+
+- Distance to the point: 20 meters (not 50 m).
+- Rating: 4.9 on Google (27 reviews). Superhost on Airbnb.
+- Pets: welcome, up to 2, by arrangement.
+- Check-in 3:00 PM, check-out 11:00 AM.
+- Currency on the site: USD.
+- Services on request: surf lessons, board rental, video analysis, airport transfer, massage, private chef.

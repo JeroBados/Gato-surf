@@ -77,6 +77,33 @@ export const ui = {
     },
     whatsapp: 'WhatsApp',
     whatsappLabel: 'Message Gato Surf Houses on WhatsApp',
+    faqTitle: 'Before you book a villa in La Saladita',
+    faq: [
+      {
+        q: 'Where is Gato Surf Houses?',
+        a: 'Gato Surf Houses is on Calle Coco s/n in La Saladita, Guerrero, Mexico, just behind Marea restaurant. The four villas sit 20 meters from the main left-hand surf point, about 45 minutes from Ixtapa-Zihuatanejo airport (ZIH).',
+      },
+      {
+        q: 'Are these villas or hotel rooms?',
+        a: 'They are four independent houses: two one-bedroom surf houses for up to three guests (Rincón del Surf and Paraíso del Surf) and two two-storey villas for up to six (Villa de Mar and Casa Gato Surf). Each has its own kitchen and terrace. All share one pool.',
+      },
+      {
+        q: 'How far are the villas from the surf in La Saladita?',
+        a: 'Twenty meters from the main point — under a minute on foot. You can see the lineup from the property. We are not 50 m inland; the walk is from the garden to the sand.',
+      },
+      {
+        q: 'How do I rent a villa in La Saladita with you?',
+        a: 'Check dates on this site. Booking and payment run through Lodgify, our booking system — card details never touch this page. You can also write us on WhatsApp at +52 56 1107 3849. We are a Superhost on Airbnb, with 4.9 on Google from 27 reviews.',
+      },
+      {
+        q: 'Can I book all four houses for a group or surf retreat?',
+        a: 'Yes. Book two, three or all four villas together around the same pool, up to 18 guests. One WhatsApp message is enough: we check the shared calendar and send a single quote, including lessons, boards, airport transfer or a private chef if you want them.',
+      },
+      {
+        q: 'What is included in a stay?',
+        a: 'Air conditioning, Starlink internet, a full kitchen, a private terrace, the shared pool, a surfboard rack, a BBQ, hammocks and parking. Pets are welcome (up to two, by arrangement). Surf lessons, board rental, video analysis, massage and airport transfers are arranged on request.',
+      },
+    ],
   },
   es: {
     nav: { houses: 'Las casas', compound: 'Grupos', services: 'Servicios', saladita: 'La Saladita', book: 'Reservar', menu: 'Menú', close: 'Cerrar' },
@@ -145,6 +172,33 @@ export const ui = {
     },
     whatsapp: 'WhatsApp',
     whatsappLabel: 'Escribir a Gato Surf Houses por WhatsApp',
+    faqTitle: 'Antes de rentar una villa en La Saladita',
+    faq: [
+      {
+        q: '¿Dónde está Gato Surf Houses?',
+        a: 'En Calle Coco s/n, La Saladita, Guerrero, México, justo detrás del restaurante Marea. Las cuatro villas quedan a 20 metros del point principal de izquierda, a unos 45 minutos del aeropuerto de Ixtapa-Zihuatanejo (ZIH).',
+      },
+      {
+        q: '¿Son villas o habitaciones de hotel?',
+        a: 'Son cuatro casas independientes: dos casas de surf de una recámara para hasta tres (Rincón del Surf y Paraíso del Surf) y dos villas de dos plantas para hasta seis (Villa de Mar y Casa Gato Surf). Cada una tiene cocina y terraza. Todas comparten una alberca.',
+      },
+      {
+        q: '¿A qué distancia están las villas de la ola en La Saladita?',
+        a: 'A veinte metros del point principal: menos de un minuto caminando. Se ve el lineup desde la propiedad. No estamos a 50 m tierra adentro; el camino es del jardín a la arena.',
+      },
+      {
+        q: '¿Cómo rento una villa en La Saladita con ustedes?',
+        a: 'Revisa fechas en este sitio. La reserva y el pago van por Lodgify, nuestro sistema de reservas: los datos de la tarjeta no pasan por esta página. También puedes escribirnos por WhatsApp al +52 56 1107 3849. Somos Superhost en Airbnb, con 4.9 en Google (27 reseñas).',
+      },
+      {
+        q: '¿Puedo reservar las cuatro casas para un grupo o un retiro de surf?',
+        a: 'Sí. Reserva dos, tres o las cuatro villas juntas alrededor de la misma alberca, hasta 18 huéspedes. Un WhatsApp alcanza: revisamos el calendario compartido y mandamos una sola cotización, con clases, tablas, traslado o chef si los quieres.',
+      },
+      {
+        q: '¿Qué incluye la estancia?',
+        a: 'Aire acondicionado, internet Starlink, cocina equipada, terraza privada, alberca compartida, rack para tablas, asador, hamacas y estacionamiento. Se aceptan mascotas (hasta dos, con aviso). Clases de surf, renta de tablas, análisis de video, masajes y traslados se coordinan a pedido.',
+      },
+    ],
   },
 } as const;
 

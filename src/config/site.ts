@@ -10,14 +10,17 @@ export const site = {
     postalCode: '40802',
     country: 'MX',
   },
-  geo: { mapsUrl: 'https://maps.app.goo.gl/zCQin6aDMmJ2kcQK8' },
+  geo: {
+    lat: 17.8423,
+    lng: -101.7688,
+    mapsUrl: 'https://maps.app.goo.gl/zCQin6aDMmJ2kcQK8',
+  },
   whatsapp: {
     number: '+52 56 1107 3849',
     link: 'https://wa.me/525611073849',
   },
   instagram: { handle: '@gatosurfhouses', url: 'https://www.instagram.com/gatosurfhouses/' },
-  // Pendiente: mail del dominio. Mientras esté vacío, el footer no muestra mail.
-  email: '',
+  email: 'gatosurfhouses@gmail.com',
   hostedBy: { name: 'Saladita Rentals', url: 'https://lasaladitarentals.com' },
   rating: { value: '4.9', count: 27, source: 'Google' },
   // Responsable del aviso de privacidad. Confirmar razón social antes de publicar.

@@ -2,11 +2,11 @@
 import type { House, Lang } from '../data/houses';
 import { routes, t } from '../i18n/ui';
 import Icon from './Icon.astro';
-interface Props { house: House; lang: Lang }
-const { house, lang } = Astro.props;
+interface Props { house: House; lang: Lang; index?: number }
+const { house, lang, index = 0 } = Astro.props;
 const s = t(lang);
 ---
-<a class="gs-house" href={routes.house[lang](house.slug)}>
+<a class="gs-house" href={routes.house[lang](house.slug)} data-reveal style={`--reveal-i:${index}`}>
   <div class="gs-photo gs-photo--4x5">
     <img src={house.card} alt={house.gallery[0].alt[lang]} width="900" height="1125" loading="lazy" decoding="async" />
   </div>
